@@ -1,5 +1,5 @@
 <template>
-  <div class="ww-aggrid-wrapper" :style="wwElementState.style">
+  <div class="ww-aggrid-wrapper" :style="wwElementState?.style">
     <ag-grid-vue
       :style="gridStyle"
       :class="themeClass"
@@ -35,7 +35,10 @@ export default {
       required: true
     }
   },
-  inject: ['wwElementState'],
+  emits: ['trigger-event'],
+  inject: {
+    wwElementState: { default: () => ({}) }
+  },
   data() {
     return {
       gridApi: null,
