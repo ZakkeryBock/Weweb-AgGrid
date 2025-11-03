@@ -1,30 +1,16 @@
 <template>
   <div class="ww-aggrid-wrapper" :style="wwElementState?.style">
-    <ag-grid-vue
-      :style="gridStyle"
-      :class="themeClass"
-      :columnDefs="columnDefs"
-      :rowData="rowData"
-      :defaultColDef="defaultColDef"
-      :pagination="content.pagination"
-      :paginationPageSize="content.paginationPageSize"
-      :domLayout="content.domLayout"
-      @grid-ready="onGridReady"
-    />
+    <div class="test-content">
+      <h3>AG Grid Test Component</h3>
+      <p>Theme: {{ content.theme || 'alpine' }}</p>
+      <p>Height: {{ content.height || '500px' }}</p>
+      <p>Data rows: {{ rowData.length }}</p>
+    </div>
   </div>
 </template>
 
 <script>
-import { AgGridVue } from "ag-grid-vue3";
-import "ag-grid-community/styles/ag-grid.css";
-import "ag-grid-community/styles/ag-theme-alpine.css";
-import "ag-grid-community/styles/ag-theme-balham.css";
-import "ag-grid-community/styles/ag-theme-material.css";
-
 export default {
-  components: {
-    AgGridVue,
-  },
   props: {
     content: {
       type: Object,
@@ -39,50 +25,13 @@ export default {
   inject: {
     wwElementState: { default: () => ({}) }
   },
-  data() {
-    return {
-      gridApi: null,
-      columnApi: null,
-    };
-  },
   computed: {
-    themeClass() {
-      return this.content.theme || "ag-theme-alpine";
-    },
-    gridStyle() {
-      return {
-        width: "100%",
-        height: this.content.height || "500px",
-      };
-    },
-    columnDefs() {
-      // Use columns from content or provide sample columns
-      return this.content.columns || [
-        { field: "make", sortable: true, filter: true },
-        { field: "model", sortable: true, filter: true },
-        { field: "price", sortable: true, filter: true },
-      ];
-    },
     rowData() {
-      // Use row data from content or provide sample data
       return this.content.rowData || [
         { make: "Toyota", model: "Celica", price: 35000 },
         { make: "Ford", model: "Mondeo", price: 32000 },
         { make: "Porsche", model: "Boxster", price: 72000 },
       ];
-    },
-    defaultColDef() {
-      return this.content.defaultColDef || {
-        resizable: true,
-        sortable: true,
-        filter: true,
-      };
-    },
-  },
-  methods: {
-    onGridReady(params) {
-      this.gridApi = params.api;
-      this.columnApi = params.columnApi;
     },
   },
 };
@@ -95,5 +44,15 @@ export default {
   height: 100%;
   min-height: 400px;
   overflow: hidden;
+  background: #f5f5f5;
+  border: 2px dashed #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.test-content {
+  text-align: center;
+  padding: 20px;
 }
 </style>
