@@ -1,15 +1,11 @@
 {
-  "name": "weweb-aggrid",
+  "name": "Harlo-AG-Grid",
   "version": "0.0.1",
   "scripts": {
-    "build": "weweb build name=weweb-aggrid type=wwobject",
+    "build": "weweb build",
     "serve": "weweb serve"
   },
   "devDependencies": {
     "@weweb/cli": "latest"
-  },
-  "dependencies": {
-    "ag-grid-community": "^34.3.1",
-    "ag-grid-vue3": "^34.3.1"
   }
 }
