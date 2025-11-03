@@ -4,7 +4,9 @@ export default {
       en: "AG Grid",
     },
     icon: "table",
+    deprecated: false,
   },
+  triggerEvents: [],
   properties: {
     theme: {
       label: {

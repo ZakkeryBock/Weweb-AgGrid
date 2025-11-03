@@ -1,5 +1,5 @@
 <template>
-  <div class="ww-aggrid-wrapper" :style="gridWrapperStyle">
+  <div class="ww-aggrid-wrapper" :style="wwElementState.style">
     <ag-grid-vue
       :style="gridStyle"
       :class="themeClass"
@@ -26,8 +26,16 @@ export default {
     AgGridVue,
   },
   props: {
-    content: { type: Object, required: true },
+    content: {
+      type: Object,
+      required: true
+    },
+    uid: {
+      type: String,
+      required: true
+    }
   },
+  inject: ['wwElementState'],
   data() {
     return {
       gridApi: null,
@@ -42,12 +50,6 @@ export default {
       return {
         width: "100%",
         height: this.content.height || "500px",
-      };
-    },
-    gridWrapperStyle() {
-      return {
-        width: "100%",
-        height: "100%",
       };
     },
     columnDefs() {
@@ -83,9 +85,12 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .ww-aggrid-wrapper {
-  display: flex;
-  flex-direction: column;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  min-height: 400px;
+  overflow: hidden;
 }
 </style>
