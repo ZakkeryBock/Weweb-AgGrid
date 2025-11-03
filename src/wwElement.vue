@@ -1,6 +1,14 @@
 <template>
-  <div class="ag-grid-container">
-    <div v-if="isEditMode" class="editor-placeholder">
+  <div class="ag-grid-container" :style="gridContainerStyle">
+    <ag-grid-vue
+      v-if="agGridReady"
+      :class="['ag-grid-themed', theme]"
+      :columnDefs="columnDefs"
+      :rowData="rowData"
+      :defaultColDef="defaultColDef"
+      style="width: 100%; height: 100%;"
+    />
+    <div v-else class="loading-placeholder">
       <div class="placeholder-content">
         <div class="placeholder-icon">📊</div>
         <div class="placeholder-title">AG Grid Table</div>
@@ -8,17 +16,6 @@
           {{ columnDefs.length }} columns · {{ rowData.length }} rows
         </div>
       </div>
-    </div>
-    <div v-else-if="!agGridLoaded" class="loading-message">
-      Loading AG Grid...
-    </div>
-    <div v-else :class="['ag-grid-themed', theme]" :style="gridContainerStyle">
-      <ag-grid-vue
-        :columnDefs="columnDefs"
-        :rowData="rowData"
-        :defaultColDef="defaultColDef"
-        style="width: 100%; height: 100%;"
-      />
     </div>
   </div>
 </template>
@@ -34,22 +31,15 @@ export default {
     content: {
       type: Object,
       required: true
-    },
-    wwEditorState: {
-      type: Object,
-      default: () => ({})
     }
   },
   data() {
     return {
-      agGridLoaded: false,
+      agGridReady: false,
+      stylesLoaded: false,
     };
   },
   computed: {
-    isEditMode() {
-      // Check if we're in WeWeb's editor mode
-      return this.wwEditorState?.isEditing ?? window.wwLib?.isEditMode?.() ?? false;
-    },
     theme() {
       return this.content.theme || 'ag-theme-alpine';
     },
@@ -89,22 +79,40 @@ export default {
     },
   },
   mounted() {
-    // Only load AG Grid in preview/live mode, not in editor
-    if (!this.isEditMode) {
-      this.loadAGGridStyles();
-    }
+    // Only initialize if the component has actual content (not during initial drag)
+    // WeWeb passes default content once component is actually placed
+    setTimeout(() => {
+      if (this.$el && this.$el.offsetParent !== null) {
+        this.loadAGGridStyles();
+      }
+    }, 300);
   },
   methods: {
     loadAGGridStyles() {
-      // Load AG Grid base styles with scoped approach
+      let stylesLoaded = 0;
+      const totalStyles = 2;
+
+      const checkReady = () => {
+        stylesLoaded++;
+        if (stylesLoaded >= totalStyles) {
+          // Small delay to ensure styles are fully applied
+          setTimeout(() => {
+            this.agGridReady = true;
+          }, 50);
+        }
+      };
+
+      // Load AG Grid base styles
       if (!document.getElementById('ag-grid-base-styles')) {
         const baseLink = document.createElement('link');
         baseLink.id = 'ag-grid-base-styles';
         baseLink.rel = 'stylesheet';
         baseLink.href = 'https://cdn.jsdelivr.net/npm/ag-grid-community@31.0.1/styles/ag-grid.css';
-        baseLink.media = 'print';
-        baseLink.onload = function() { this.media = 'all'; };
+        baseLink.onload = checkReady;
+        baseLink.onerror = checkReady;
         document.head.appendChild(baseLink);
+      } else {
+        checkReady();
       }
 
       // Load AG Grid theme styles
@@ -113,19 +121,11 @@ export default {
         themeLink.id = 'ag-grid-theme-styles';
         themeLink.rel = 'stylesheet';
         themeLink.href = 'https://cdn.jsdelivr.net/npm/ag-grid-community@31.0.1/styles/ag-theme-alpine.css';
-        themeLink.media = 'print';
-        themeLink.onload = function() {
-          this.media = 'all';
-        };
-
-        // Set loaded flag after a small delay to ensure styles are applied
-        setTimeout(() => {
-          this.agGridLoaded = true;
-        }, 100);
-
+        themeLink.onload = checkReady;
+        themeLink.onerror = checkReady;
         document.head.appendChild(themeLink);
       } else {
-        this.agGridLoaded = true;
+        checkReady();
       }
     },
   },
@@ -137,7 +137,9 @@ export default {
   width: 100%;
   height: 100%;
   min-height: 300px;
-  background: white;
+  position: relative;
+  /* Critical: prevent interfering with WeWeb's drag and drop */
+  pointer-events: auto !important;
 }
 
 .ag-grid-themed {
@@ -145,16 +147,7 @@ export default {
   height: 100%;
 }
 
-.loading-message {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
-  font-size: 16px;
-  color: #666;
-}
-
-.editor-placeholder {
+.loading-placeholder {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -164,19 +157,15 @@ export default {
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   border: 2px dashed #a0aec0;
   border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.editor-placeholder:hover {
-  border-color: #4299e1;
-  background: linear-gradient(135deg, #e6f2ff 0%, #b8d4f1 100%);
+  /* Critical: allow WeWeb to handle all pointer events during loading/placement */
+  pointer-events: none !important;
 }
 
 .placeholder-content {
   text-align: center;
   padding: 20px;
-  pointer-events: none;
+  /* Ensure all child elements don't block pointer events */
+  pointer-events: none !important;
 }
 
 .placeholder-icon {
