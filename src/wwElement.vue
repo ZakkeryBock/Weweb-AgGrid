@@ -1,51 +1,31 @@
 <template>
-  <div class="test-container">
-    <p>AG Grid Component Works!</p>
-    <p v-if="uid">UID: {{ uid }}</p>
+  <div class="black-box">
+    <p>Test Component</p>
   </div>
 </template>
 
 <script>
 export default {
   props: {
-    content: {
-      type: Object,
-      required: true
-    },
-    uid: {
-      type: String,
-      required: true
-    },
-    wwElementState: {
-      type: Object,
-      required: true
-    },
-    wwEditorState: {
-      type: Object,
-      required: true
-    }
+    content: { type: Object, required: true },
+    uid: { type: String, required: true },
+    wwElementState: { type: Object, required: true },
+    wwEditorState: { type: Object, required: true }
   }
 };
 </script>
 
 <style scoped>
-.test-container {
-  padding: 20px;
-  background: #4CAF50;
+.black-box {
+  background: black;
   color: white;
+  padding: 40px;
   text-align: center;
-  border-radius: 8px;
-  min-height: 100px;
+  font-size: 24px;
+  font-weight: bold;
+  min-height: 150px;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-}
-
-.test-container p {
-  margin: 0;
-  font-size: 16px;
-  font-weight: bold;
 }
 </style>
