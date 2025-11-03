@@ -4,12 +4,47 @@ This is an element for [weweb.io](https://www.weweb.io/).
 
 ## Installation
 
-To run locally, first install all dependencies with `npm i`
+## WeWeb AG Grid Component
 
-## Start
+This component is ready to use with WeWeb!
 
-To serve locally, run `npm run serve --port=[PORT]`, and then go to Weweb editor, open developper popup and add your custom element.
+### Installation
 
-## Build
+Dependencies are already installed. If you need to reinstall:
 
-Before release, you can check build error by running `npm run build --name=my-element`
+```bash
+npm install
+```
+
+### Development
+
+To test locally with WeWeb editor:
+
+```bash
+npm run serve -- --port=8090
+```
+
+Then in WeWeb editor, open the developer popup and add your custom element pointing to `https://localhost:8090`.
+
+### Build
+
+To build for production (GitHub integration):
+
+```bash
+npm run build
+```
+
+This creates the `dist/manager.js` file that WeWeb uses.
+
+### Using in WeWeb
+
+1. **GitHub Method**: Push this repo to GitHub, then add it as a custom component source in WeWeb dashboard
+2. **Local Development**: Run `npm run serve -- --port=8090` and add as local component in WeWeb editor
+
+### Features
+
+- **Row Data**: Bind your data array
+- **Columns**: Configure column definitions
+- **Theme**: Choose between Alpine, Balham, or Material
+- **Height**: Set grid height
+- All columns are sortable, filterable, and resizable by default

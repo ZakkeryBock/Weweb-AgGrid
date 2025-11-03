@@ -1,14 +1,13 @@
 <template>
-  <div class="ag-grid-wrapper">
-    <div
-      :class="theme"
-      :style="containerStyle"
-    >
+  <div class="ag-grid-container">
+    <div v-if="!agGridLoaded" class="loading-message">
+      Loading AG Grid...
+    </div>
+    <div v-else :class="['ag-grid-themed', theme]" :style="gridContainerStyle">
       <ag-grid-vue
         :columnDefs="columnDefs"
         :rowData="rowData"
         :defaultColDef="defaultColDef"
-        class="ag-grid-component"
         style="width: 100%; height: 100%;"
       />
     </div>
@@ -17,10 +16,6 @@
 
 <script>
 import { AgGridVue } from 'ag-grid-vue3';
-import 'ag-grid-community/styles/ag-grid.css';
-import 'ag-grid-community/styles/ag-theme-alpine.css';
-import 'ag-grid-community/styles/ag-theme-balham.css';
-import 'ag-grid-community/styles/ag-theme-material.css';
 
 export default {
   components: {
@@ -32,11 +27,16 @@ export default {
       required: true
     },
   },
+  data() {
+    return {
+      agGridLoaded: false,
+    };
+  },
   computed: {
     theme() {
       return this.content.theme || 'ag-theme-alpine';
     },
-    containerStyle() {
+    gridContainerStyle() {
       return {
         width: '100%',
         height: this.content.height || '500px',
@@ -71,18 +71,58 @@ export default {
       };
     },
   },
+  mounted() {
+    this.loadAGGridStyles();
+  },
+  methods: {
+    loadAGGridStyles() {
+      // Load AG Grid base styles
+      if (!document.getElementById('ag-grid-base-styles')) {
+        const baseLink = document.createElement('link');
+        baseLink.id = 'ag-grid-base-styles';
+        baseLink.rel = 'stylesheet';
+        baseLink.href = 'https://cdn.jsdelivr.net/npm/ag-grid-community@31.0.1/styles/ag-grid.css';
+        document.head.appendChild(baseLink);
+      }
+
+      // Load AG Grid theme styles
+      if (!document.getElementById('ag-grid-theme-styles')) {
+        const themeLink = document.createElement('link');
+        themeLink.id = 'ag-grid-theme-styles';
+        themeLink.rel = 'stylesheet';
+        themeLink.href = 'https://cdn.jsdelivr.net/npm/ag-grid-community@31.0.1/styles/ag-theme-alpine.css';
+        document.head.appendChild(themeLink);
+
+        themeLink.onload = () => {
+          this.agGridLoaded = true;
+        };
+      } else {
+        this.agGridLoaded = true;
+      }
+    },
+  },
 };
 </script>
 
 <style scoped>
-.ag-grid-wrapper {
+.ag-grid-container {
   width: 100%;
   height: 100%;
-  min-height: 200px;
+  min-height: 300px;
+  background: white;
 }
 
-.ag-grid-component {
+.ag-grid-themed {
   width: 100%;
   height: 100%;
+}
+
+.loading-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  font-size: 16px;
+  color: #666;
 }
 </style>
