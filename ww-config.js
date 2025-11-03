@@ -6,47 +6,13 @@ export default {
     icon: "table",
   },
   properties: {
-    rowData: {
+    height: {
       label: {
-        en: "Row Data",
+        en: "Height",
       },
-      type: "Array",
+      type: "Length",
       section: "settings",
-      defaultValue: [
-        { make: "Toyota", model: "Celica", price: 35000 },
-        { make: "Ford", model: "Mondeo", price: 32000 },
-        { make: "Porsche", model: "Boxster", price: 72000 },
-      ],
-      bindable: true,
-    },
-    columns: {
-      label: {
-        en: "Columns",
-      },
-      type: "Array",
-      section: "settings",
-      options: {
-        item: {
-          type: "Object",
-          options: {
-            item: {
-              field: {
-                type: "Text",
-                label: { en: "Field" },
-              },
-              headerName: {
-                type: "Text",
-                label: { en: "Header" },
-              },
-            },
-          },
-        },
-      },
-      defaultValue: [
-        { field: "make", headerName: "Make" },
-        { field: "model", headerName: "Model" },
-        { field: "price", headerName: "Price" },
-      ],
+      defaultValue: "500px",
     },
     theme: {
       label: {
@@ -63,13 +29,36 @@ export default {
       },
       defaultValue: "ag-theme-alpine",
     },
-    height: {
+    rowData: {
       label: {
-        en: "Height",
+        en: "Row Data",
       },
-      type: "Length",
+      type: "Info",
       section: "settings",
-      defaultValue: "500px",
+      options: {
+        text: { en: "Bind your data array to display in the grid" },
+      },
+      bindable: true,
+      defaultValue: [
+        { make: "Toyota", model: "Celica", price: 35000 },
+        { make: "Ford", model: "Mondeo", price: 32000 },
+        { make: "Porsche", model: "Boxster", price: 72000 },
+      ],
+    },
+    columns: {
+      label: {
+        en: "Columns",
+      },
+      type: "Info",
+      section: "settings",
+      options: {
+        text: { en: "Configure column definitions" },
+      },
+      defaultValue: [
+        { field: "make", headerName: "Make" },
+        { field: "model", headerName: "Model" },
+        { field: "price", headerName: "Price" },
+      ],
     },
   },
 };
