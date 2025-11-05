@@ -1,8 +1,8 @@
 {
-  "name": "ag-grid-table",
-  "version": "1.3.7",
+  "name": "weweb-agdatagrid",
+  "version": "1.3.8",
   "scripts": {
-    "build": "weweb build -- name=ww-datagrid-ag type=wwobject",
+    "build": "weweb build -- name=weweb-agdatagrid type=wwobject",
     "serve": "weweb serve"
   },
   "dependencies": {
