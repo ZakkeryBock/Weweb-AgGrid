@@ -135,10 +135,6 @@ export default {
       gridApi.value = params.api;
       const columns = params.api.getAllGridColumns();
       setColumnOrder(columns.map((col) => col.getColId()));
-      // Force initial render to fix first row not showing
-      nextTick(() => {
-        params.api.refreshCells({ force: true });
-      });
     };
 
     let initialFilter = "";
@@ -485,8 +481,9 @@ export default {
       }
     },
     style() {
-      if (this.content.layout === "auto") return {};
+      if (this.content.layout === "auto") return { width: this.content.width || "100%" };
       return {
+        width: this.content.width || "100%",
         height: this.content.height || "400px",
       };
     },
@@ -569,7 +566,13 @@ export default {
   },
   methods: {
     getRowId(params) {
-      return this.resolveMappingFormula(this.content.idFormula, params.data);
+      if (!this.content.idFormula) {
+        // If no ID formula is set, use the data's id field or generate one
+        return String(params.data?.id ?? `row-${Math.random()}`);
+      }
+      const id = this.resolveMappingFormula(this.content.idFormula, params.data);
+      // Ensure the ID is always a valid string
+      return id != null ? String(id) : String(params.data?.id ?? `row-${Math.random()}`);
     },
     onActionTrigger(event) {
       this.$emit("trigger-event", {
@@ -749,6 +752,7 @@ export default {
 <style scoped lang="scss">
 .ww-datagrid {
   position: relative;
+  width: 100%;
   :deep(.ag-cell-wrapper),
   :deep(.ag-cell-value) {
     height: 100%;

@@ -10,6 +10,7 @@ export default {
         isCollapsible: true,
         properties: [
           "layout",
+          "width",
           "height",
           "textColor",
           "borderColor",
@@ -281,6 +282,28 @@ export default {
       bindingValidation: {
         type: "string",
         tooltip: "fixed | auto",
+      },
+    },
+    width: {
+      label: { en: "Grid Width" },
+      type: "Length",
+      section: "style",
+      options: {
+        noRange: true,
+        unitChoices: [
+          { value: "%", label: "%", min: 0, max: 100, default: true },
+          { value: "px", label: "px", min: 0, max: 5000 },
+          { value: "vw", label: "vw", min: 0, max: 100 },
+        ],
+      },
+      bindable: true,
+      classes: true,
+      responsive: true,
+      states: true,
+      defaultValue: "100%",
+      bindingValidation: {
+        type: "string",
+        tooltip: "Width of the grid (e.g., 100%, 800px)",
       },
     },
     height: {
