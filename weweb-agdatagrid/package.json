@@ -1,9 +1,13 @@
 {
-  "name": "weweb-agdatagrid",
-  "version": "0.0.1",
+  "name": "ag-grid-table",
+  "version": "1.3.7",
   "scripts": {
-    "build": "weweb build",
+    "build": "weweb build -- name=ww-datagrid-ag type=wwobject",
     "serve": "weweb serve"
+  },
+  "dependencies": {
+    "@ag-grid-community/locale": "33.2.4",
+    "ag-grid-vue3": "33.2.4"
   },
   "devDependencies": {
     "@weweb/cli": "latest"
